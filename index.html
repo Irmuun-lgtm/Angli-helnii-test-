@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2 English Test</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      margin: 0; 
+      padding: 0; 
+      background-color: #f7f7f7; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh;
+      flex-direction: column;
+    }
+    .container { 
+      width: 80%; 
+      max-width: 700px; 
+      background-color: white; 
+      padding: 30px; 
+      border-radius: 8px; 
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+      text-align: center; 
+    }
+    h1 { 
+      font-size: 2em; 
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .button { 
+      padding: 15px 25px; 
+      margin: 10px; 
+      background-color: #4CAF50; 
+      color: white; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      transition: background-color 0.3s ease;
+    }
+    .button:hover { 
+      background-color: #45a049; 
+    }
+    .question { 
+      font-weight: bold; 
+      font-size: 1.2em; 
+      margin-bottom: 20px; 
+      color: #333; 
+    }
+    .options { 
+      margin: 10px 0; 
+    }
+    .options button {
+      padding: 12px 24px;
+      margin: 5px;
+      background-color: #f0f0f0;
+      border: 1px solid #ddd;
+      cursor: pointer;
+      width: 80%;
+      border-radius: 5px;
+    }
+    .options button:hover {
+      background-color: #e0e0e0;
+    }
+    .result { 
+      font-size: 1.5em; 
+      font-weight: bold; 
+      color: #333; 
+      margin-top: 20px;
+    }
+    .animated {
+      animation: fadeIn 1s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="home" class="container animated">
+    <h1>Welcome to the A2 English Test</h1>
+    <p>Test your English skills with a simple, easy quiz.</p>
+    <button class="button" onclick="startTest()">Start Test</button>
+  </div>
+
+  <div id="test" class="container" style="display: none;" class="animated">
+    <p class="question" id="question-text">Question text here...</p>
+    <div class="options">
+      <button class="button" onclick="answerQuestion(0)">Option 1</button>
+      <button class="button" onclick="answerQuestion(1)">Option 2</button>
+      <button class="button" onclick="answerQuestion(2)">Option 3</button>
+      <button class="button" onclick="answerQuestion(3)">Option 4</button>
+    </div>
+  </div>
+
+  <div id="results" class="container" style="display: none;" class="animated">
+    <p class="result" id="result-text">Your score: </p>
+    <button class="button" onclick="restartTest()">Try Again</button>
+  </div>
+
+  <script>
+    // Array of 20 questions for the test
+    const questions = [
+      { text: "Which sentence is in the past tense?", options: ["I walk to school every day.", "She will walk to school tomorrow.", "He walked to school yesterday.", "They are walking to school now."], answer: 2 },
+      { text: "Which word means the same as 'happy'?", options: ["Sad", "Angry", "Joyful", "Tired"], answer: 2 },
+      { text: "Choose the correct sentence.", options: ["He go to school every day.", "They goes to school every day.", "She goes to school every day.", "We is going to school every day."], answer: 2 },
+      { text: "Complete the sentence: 'I will meet you ___ the bus stop.'", options: ["on", "at", "in", "by"], answer: 1 },
+      { text: "Fill in the blank: 'She is ___ honest person.'", options: ["a", "an", "the", "none"], answer: 1 },
+      { text: "Which word means 'big'?", options: ["Large", "Small", "Heavy", "Light"], answer: 0 },
+      { text: "What is the correct form of the verb: 'She ___ to school every day.'", options: ["go", "goes", "going", "gone"], answer: 1 },
+      { text: "Which sentence is in the future tense?", options: ["He eats breakfast every morning.", "They will play football tomorrow.", "I am reading a book.", "She was singing."], answer: 1 },
+      { text: "Which word is a noun?", options: ["Happy", "Quickly", "Dog", "Run"], answer: 2 },
+      { text: "What is the opposite of 'fast'?", options: ["Slow", "Quick", "Hard", "Soft"], answer: 0 },
+      { text: "Which word is a preposition?", options: ["In", "Jump", "Quick", "Beautiful"], answer: 0 },
+      { text: "Which of these is a verb?", options: ["Jump", "Tall", "Fast", "Above"], answer: 0 },
+      { text: "Which is a correct question?", options: ["What are you doing?", "Where you going?", "She is going home.", "He went to the store."], answer: 0 },
+      { text: "Complete the sentence: 'I ___ a book.'", options: ["read", "reads", "reading", "readed"], answer: 0 },
+      { text: "What is the opposite of 'hot'?", options: ["Cold", "Warm", "High", "Burning"], answer: 0 },
+      { text: "Which of these is a type of food?", options: ["Car", "Banana", "House", "Bird"], answer: 1 },
+      { text: "Which of these is a correct sentence?", options: ["She has been to the store.", "She will goes to the store.", "She is going store.", "She went to store."], answer: 0 },
+      { text: "Choose the correct pronoun: '___ is my favorite book.'", options: ["He", "She", "It", "They"], answer: 2 },
+      { text: "Which word means 'not tall'?", options: ["Short", "Long", "Big", "Heavy"], answer: 0 },
+      { text: "What is the correct form of the verb: 'They ___ lunch at 12 PM.'", options: ["have", "has", "having", "had"], answer: 0 },
+      { text: "Which of these is a correct sentence?", options: ["He runs every day.", "He run every day.", "He running every day.", "He ran every day."], answer: 0 },
+      { text: "Which sentence is in the present tense?", options: ["I will go to the store.", "I am eating now.", "I ate lunch yesterday.", "I will be going."], answer: 1 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    // Check if student has already participated
+    if (localStorage.getItem('participated') === 'true') {
+      alert('You have already taken the test.');
+      window.location.href = 'https://www.example.com'; // Redirect to a different page to prevent further participation
+    }
+
+    function startTest() {
+      localStorage.setItem('participated', 'true'); // Track participation
+      document.getElementById("home").style.display = "none";
+      document.getElementById("test").style.display = "block";
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      if (currentQuestion < questions.length) {
+        document.getElementById("question-text").textContent = questions[currentQuestion].text;
+        const buttons = document.querySelectorAll(".options button");
+        for (let i = 0; i < buttons.length; i++) {
+          buttons[i].textContent = questions[currentQuestion].options[i];
+        }
+      } else {
+        showResults();
+      }
+    }
+
+    function answerQuestion(answer) {
+      if (answer === questions[currentQuestion].answer) {
+        score++;
+      }
+      currentQuestion++;
+      loadQuestion();
+    }
+
+    function showResults() {
+      document.getElementById("test").style.display = "none";
+      document.getElementById("results").style.display = "block";
+      document.getElementById("result-text").textContent = `Your score: ${score} out of ${questions.length}`;
+    }
+
+    function restartTest() {
+      localStorage.removeItem('participated'); // Allow for a fresh attempt after results
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>
